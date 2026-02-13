@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procesador de Archivos</title>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --primary: #0f766e;
+        --primary-hover: #115e59;
+        --text: #0f172a;
+        --muted: #475569;
+        --danger-bg: #fef2f2;
+        --danger-text: #991b1b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(180deg, #e2f4f1 0%, var(--bg) 45%, #eef2ff 100%);
+        color: var(--text);
+      }
+
+      .card {
+        width: min(92vw, 560px);
+        background: var(--card);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+      }
+
+      p {
+        margin: 0 0 20px;
+        color: var(--muted);
+      }
+
+      .alert {
+        margin-bottom: 16px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: var(--danger-bg);
+        color: var(--danger-text);
+        font-size: 0.9rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      input[type="file"] {
+        width: 100%;
+        margin-bottom: 18px;
+      }
+
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--primary);
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: var(--primary-hover);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      button:disabled:hover {
+        background: var(--primary);
+      }
+
+      .hint {
+        margin-top: 14px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Subir y modificar archivo</h1>
+      <p>Carga un XML y descarga automaticamente la version procesada por tu script.</p>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="/procesar" method="post" enctype="multipart/form-data">
+        <label for="archivo">Archivo Excel o XML</label>
+        <input id="archivo" name="archivo" type="file" accept=".xml" required />
+        <button type="submit" id="btn-submit" disabled>Procesar y descargar</button>
+      </form>
+
+    </main>
+    <script>
+      (function () {
+        var input = document.getElementById('archivo');
+        var btn = document.getElementById('btn-submit');
+        function updateButton() {
+          btn.disabled = !input.files || input.files.length === 0;
+        }
+        input.addEventListener('change', updateButton);
+      })();
+    </script>
+  </body>
+</html>
